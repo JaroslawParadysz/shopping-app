@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\ShoppingApp.Shared.Infrastructure\ShoppingApp.Shared.Infrastructure.csproj" />
     <ProjectReference Include="..\ShoppingApp.Modules.Products.Core\ShoppingApp.Modules.Products.Core.csproj" />
   </ItemGroup>
 
