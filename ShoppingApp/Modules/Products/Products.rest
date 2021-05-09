@@ -1,0 +1,10 @@
+@url = http://localhost:5000/products-module
+
+###
+POST {{url}}/categories
+Content-Type: application/json
+
+{
+    "name" : "Vegtables",
+    "categoryId": "1"
+}

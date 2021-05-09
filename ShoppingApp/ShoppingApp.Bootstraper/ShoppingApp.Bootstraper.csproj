@@ -14,4 +14,9 @@
     <Folder Include="Controllers\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Modules\Products\ShoppingApp.Modules.Products.Api\ShoppingApp.Modules.Products.Api.csproj" />
+    <ProjectReference Include="..\ShoppingApp.Shared.Infrastructure\ShoppingApp.Shared.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>
