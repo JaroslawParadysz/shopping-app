@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using ShoppingApp.Modules.Products.Api;
 using ShoppingApp.Shared.Infrastructure;
 using System;
 using System.Collections.Generic;
@@ -35,6 +36,7 @@ namespace ShoppingApp.Bootstraper
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ShoppingApp.Bootstraper", Version = "v1" });
             });
+            services.AddProductsModule();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
