@@ -1,10 +1,13 @@
 @url = http://localhost:5000/products-module
+@categoryId = 0e811788-3168-4ffd-bb14-011edb05cf83
 
 ###
 POST {{url}}/categories
 Content-Type: application/json
 
 {
-    "name" : "Vegtables",
-    "categoryId": "1"
+    "Name" : "Abv"
 }
+
+###
+GET {{url}}/categories/{{categoryId}}

@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ShoppingApp.Modules.Products.Api.Endpoints.Categories
+﻿namespace ShoppingApp.Modules.Products.Api.Endpoints.Categories
 {
     public class CreateCategoryCommand
     {
+        public string Name { get; set; }
     }
 }
