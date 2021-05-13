@@ -4,6 +4,8 @@ using ShoppingApp.Modules.Products.Core.DTO;
 using ShoppingApp.Modules.Products.Core.Exceptions;
 using ShoppingApp.Modules.Products.Core.Services.Interfaces;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ShoppingApp.Modules.Products.Core.Services
@@ -29,6 +31,15 @@ namespace ShoppingApp.Modules.Products.Core.Services
         {
             var category = new Category { Name = dto.Name };
             return await _repository.AddAsync(category);
+        }
+
+        public async Task<IList<CategoryDto>> GetAsync()
+        {
+            var categories = await _repository.GetAsync();
+            var categoryDtos = categories.Select(category => new CategoryDto { Id = category.Id, Name = category.Name })
+                .ToList();
+
+            return categoryDtos;
         }
     }
 }

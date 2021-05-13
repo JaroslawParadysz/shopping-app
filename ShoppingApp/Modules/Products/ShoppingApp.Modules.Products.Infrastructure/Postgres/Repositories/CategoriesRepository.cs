@@ -34,9 +34,9 @@ namespace ShoppingApp.Modules.Products.Infrastructure.Postgres.Repositories
             return await _productsDbContext.Categories.SingleOrDefaultAsync(category => category.Id == id);
         }
 
-        public Task<IList<Category>> GetAsync()
+        public async Task<IList<Category>> GetAsync()
         {
-            throw new NotImplementedException();
+            return await _productsDbContext.Categories.ToListAsync();
         }
 
         public Task UpdateAsync(Category category)

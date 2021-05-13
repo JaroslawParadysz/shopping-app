@@ -6,8 +6,11 @@ POST {{url}}/categories
 Content-Type: application/json
 
 {
-    "Name" : "Abv"
+    "name" : "New Category 2"
 }
 
 ###
 GET {{url}}/categories/{{categoryId}}
+
+###
+GET {{url}}/categories
