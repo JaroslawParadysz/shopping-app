@@ -14,3 +14,11 @@ GET {{url}}/categories/{{categoryId}}
 
 ###
 GET {{url}}/categories
+
+###
+PUT {{url}}/categories/{{categoryId}}
+Content-Type: application/json
+
+{
+    "name" : "New Category 2"
+}

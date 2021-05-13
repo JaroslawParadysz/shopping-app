@@ -39,9 +39,12 @@ namespace ShoppingApp.Modules.Products.Infrastructure.Postgres.Repositories
             return await _productsDbContext.Categories.ToListAsync();
         }
 
-        public Task UpdateAsync(Category category)
+        public async Task UpdateAsync(Category category)
         {
-            throw new NotImplementedException();
+            var toUpdate = await GetAsync(category.Id);
+            toUpdate.Name = category.Name;
+
+            await _productsDbContext.SaveChangesAsync();
         }
     }
 }

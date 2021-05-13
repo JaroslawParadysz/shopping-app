@@ -41,5 +41,10 @@ namespace ShoppingApp.Modules.Products.Core.Services
 
             return categoryDtos;
         }
+
+        public async Task UpdateAsync(CategoryDto categoryDto)
+        {
+            await _repository.UpdateAsync(new Category { Id = categoryDto.Id, Name = categoryDto.Name });
+        }
     }
 }
