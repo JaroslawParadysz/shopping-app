@@ -25,7 +25,7 @@ namespace ShoppingApp.Modules.Products.Core.Services
             var category = await _repository.GetAsync(id);
             if (category is null) throw new CategoryNotFoundException(id);
 
-            return new CategoryDto { Id = category.Id, Name = category.Name };
+            return category.Adapt<CategoryDto>();
         }
 
         public async Task<Guid> AddAsync(CategoryDto dto)
@@ -37,7 +37,7 @@ namespace ShoppingApp.Modules.Products.Core.Services
         public async Task<IList<CategoryDto>> GetAsync()
         {
             var categories = await _repository.GetAsync();
-            var categoryDtos = categories.Select(category => new CategoryDto { Id = category.Id, Name = category.Name })
+            var categoryDtos = categories.Select(category => category.Adapt<CategoryDto>())
                 .ToList();
 
             return categoryDtos;
@@ -45,7 +45,8 @@ namespace ShoppingApp.Modules.Products.Core.Services
 
         public async Task UpdateAsync(CategoryDto categoryDto)
         {
-            await _repository.UpdateAsync(new Category { Id = categoryDto.Id, Name = categoryDto.Name });
+            var category = categoryDto.Adapt<Category>();
+            await _repository.UpdateAsync(category);
         }
 
         public async Task DeleteAsync(Guid id)

@@ -28,6 +28,7 @@ namespace ShoppingApp.Modules.Products.Infrastructure.Postgres.Repositories
         {
             var category = await GetAsync(id);
             _productsDbContext.Categories.Remove(category);
+            await _productsDbContext.SaveChangesAsync();
         }
 
         public async Task<Category> GetAsync(Guid id)

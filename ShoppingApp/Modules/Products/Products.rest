@@ -1,12 +1,12 @@
 @url = http://localhost:5000/products-module
-@categoryId = 77a4ff97-94f0-45c3-82d4-fdc79e4c0ed7
+@categoryId = 8364e211-d8b1-4bb6-9b3e-1526b2365dad
 
 ###
 POST {{url}}/categories
 Content-Type: application/json
 
 {
-    "name" : "New Category 2"
+    "name" : "New Category v1"
 }
 
 ###
