@@ -1,10 +1,11 @@
-﻿using System;
+﻿using ShoppingApp.Shared.Abstraction;
+using System;
 
 namespace ShoppingApp.Modules.Products.Core.Exceptions
 {
-    public class CategoryNotFoundException : Exception
+    public class CategoryNotFoundException : ShoppingAppException
     {
-        public CategoryNotFoundException(Guid id) : base($"Category with id {id} has not bee found.")
+        public CategoryNotFoundException(Guid id) : base($"Category with id {id} has not been found.")
         {
         }
     }

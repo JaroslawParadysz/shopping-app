@@ -8,4 +8,8 @@
     <PackageReference Include="Mapster" Version="7.2.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\ShoppingApp.Shared.Abstraction\ShoppingApp.Shared.Abstraction.csproj" />
+  </ItemGroup>
+
 </Project>
