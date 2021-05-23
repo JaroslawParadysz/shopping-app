@@ -24,9 +24,10 @@ namespace ShoppingApp.Modules.Products.Infrastructure.Postgres.Repositories
             return category.Id;
         }
 
-        public Task DelateCategory(Guid id)
+        public async Task DelateAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var category = await GetAsync(id);
+            _productsDbContext.Categories.Remove(category);
         }
 
         public async Task<Category> GetAsync(Guid id)

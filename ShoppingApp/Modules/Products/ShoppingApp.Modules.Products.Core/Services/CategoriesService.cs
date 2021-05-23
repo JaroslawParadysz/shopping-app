@@ -1,4 +1,5 @@
-﻿using ShoppingApp.Modules.Products.Core.DAL;
+﻿using Mapster;
+using ShoppingApp.Modules.Products.Core.DAL;
 using ShoppingApp.Modules.Products.Core.DomainModels;
 using ShoppingApp.Modules.Products.Core.DTO;
 using ShoppingApp.Modules.Products.Core.Exceptions;
@@ -29,7 +30,7 @@ namespace ShoppingApp.Modules.Products.Core.Services
 
         public async Task<Guid> AddAsync(CategoryDto dto)
         {
-            var category = new Category { Name = dto.Name };
+            var category = dto.Adapt<Category>();
             return await _repository.AddAsync(category);
         }
 
@@ -45,6 +46,11 @@ namespace ShoppingApp.Modules.Products.Core.Services
         public async Task UpdateAsync(CategoryDto categoryDto)
         {
             await _repository.UpdateAsync(new Category { Id = categoryDto.Id, Name = categoryDto.Name });
+        }
+
+        public async Task DeleteAsync(Guid id)
+        {
+            await _repository.DelateAsync(id);
         }
     }
 }

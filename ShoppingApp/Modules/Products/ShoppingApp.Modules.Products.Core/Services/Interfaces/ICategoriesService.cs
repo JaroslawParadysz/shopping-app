@@ -12,5 +12,6 @@ namespace ShoppingApp.Modules.Products.Core.Services.Interfaces
         Task<IList<CategoryDto>> GetAsync();
         Task<Guid> AddAsync(CategoryDto dto);
         Task UpdateAsync(CategoryDto categoryDto);
+        Task DeleteAsync(Guid request);
     }
 }

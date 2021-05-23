@@ -1,5 +1,5 @@
 @url = http://localhost:5000/products-module
-@categoryId = 0e811788-3168-4ffd-bb14-011edb05cf83
+@categoryId = 77a4ff97-94f0-45c3-82d4-fdc79e4c0ed7
 
 ###
 POST {{url}}/categories
@@ -20,5 +20,9 @@ PUT {{url}}/categories/{{categoryId}}
 Content-Type: application/json
 
 {
-    "name" : "New Category 2"
+    "id" : "{{categoryId}}",
+    "name" : "New Category 34"
 }
+
+###
+DELETE {{url}}/categories/{{categoryId}}

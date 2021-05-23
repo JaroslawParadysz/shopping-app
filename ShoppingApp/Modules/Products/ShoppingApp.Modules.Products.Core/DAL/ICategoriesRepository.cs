@@ -11,6 +11,6 @@ namespace ShoppingApp.Modules.Products.Core.DAL
         Task<Category> GetAsync(Guid id);
         Task<IList<Category>> GetAsync();
         Task UpdateAsync(Category category);
-        Task DelateCategory(Guid id);
+        Task DelateAsync(Guid id);
     }
 }

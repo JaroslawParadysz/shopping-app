@@ -1,4 +1,5 @@
 ﻿using Ardalis.ApiEndpoints;
+using Mapster;
 using Microsoft.AspNetCore.Mvc;
 using ShoppingApp.Modules.Products.Core.DTO;
 using ShoppingApp.Modules.Products.Core.Services.Interfaces;
@@ -18,7 +19,8 @@ namespace ShoppingApp.Modules.Products.Api.Endpoints.Categories
         [HttpPost(ProductsRest.CategoriesPath)]
         public async override Task<ActionResult> HandleAsync([FromBody] CreateCategoryCommand request, CancellationToken cancellationToken = default)
         {
-            var categoryId = await _categoriesService.AddAsync(new CategoryDto { Name = request.Name });
+            var category = request.Adapt<CategoryDto>();
+            var categoryId = await _categoriesService.AddAsync(category);
             return CreatedAtRoute("Get", new { Id = categoryId }, null);
         }
     }
