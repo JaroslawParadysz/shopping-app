@@ -11,6 +11,7 @@ namespace ShoppingApp.Modules.Products.Infrastructure.Postgres
         {
             services.AddPostgresDbContext<ProductsDbContext>();
             services.AddScoped<ICategoriesRepository, CategoriesRepository>();
+            services.AddScoped<IProductsRepository, ProductsReporistory>();
             return services;
         }
     }

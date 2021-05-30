@@ -21,7 +21,7 @@ namespace ShoppingApp.Modules.Products.Api.Endpoints.Categories
         {
             var category = request.Adapt<CategoryDto>();
             var categoryId = await _categoriesService.AddAsync(category);
-            return CreatedAtRoute("Get", new { Id = categoryId }, null);
+            return CreatedAtRoute("GetCategory", new { Id = categoryId }, null);
         }
     }
 }

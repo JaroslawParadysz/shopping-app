@@ -1,28 +1,16 @@
 @url = http://localhost:5000/products-module
 @categoryId = 8364e211-d8b1-4bb6-9b3e-1526b2365dad
+@productId = 8364e211-d8b1-4bb6-9b3e-1526b2365dad
 
 ###
-POST {{url}}/categories
+POST {{url}}/products
 Content-Type: application/json
 
 {
-    "name" : "New Category v1"
+    "productName" : "New Product",
+    "categoryId": "{{categoryId}}"
 }
 
 ###
-GET {{url}}/categories/{{categoryId}}
+GET {{url}}/products/{{productId}}
 
-###
-GET {{url}}/categories
-
-###
-PUT {{url}}/categories/{{categoryId}}
-Content-Type: application/json
-
-{
-    "id" : "{{categoryId}}",
-    "name" : "New Category 34"
-}
-
-###
-DELETE {{url}}/categories/{{categoryId}}

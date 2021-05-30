@@ -11,6 +11,7 @@ namespace ShoppingApp.Modules.Products.Api
         {
             services.AddProductsDbContext();
             services.AddScoped<ICategoriesService, CategoriesService>();
+            services.AddScoped<IProductsService, ProductsService>();
 
             return services;
         }

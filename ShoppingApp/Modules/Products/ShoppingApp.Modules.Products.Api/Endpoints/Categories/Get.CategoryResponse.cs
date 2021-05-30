@@ -1,4 +1,5 @@
 ﻿using ShoppingApp.Modules.Products.Core.DTO;
+using System.Runtime.CompilerServices;
 
 namespace ShoppingApp.Modules.Products.Api.Endpoints.Categories
 {
