@@ -1,6 +1,6 @@
 @url = http://localhost:5000/products-module
 @categoryId = 8364e211-d8b1-4bb6-9b3e-1526b2365dad
-@productId = 8364e211-d8b1-4bb6-9b3e-1526b2365dad
+@productId = dc36eaa7-2c10-4e72-8f51-3dd4798690a0
 
 ###
 POST {{url}}/products
