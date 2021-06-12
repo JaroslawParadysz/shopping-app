@@ -5,6 +5,7 @@ using ShoppingApp.Modules.Products.Core.DTO;
 using ShoppingApp.Modules.Products.Core.Exceptions;
 using ShoppingApp.Modules.Products.Core.Services.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ShoppingApp.Modules.Products.Core.Services
@@ -40,6 +41,14 @@ namespace ShoppingApp.Modules.Products.Core.Services
             var dto = product.Adapt<ProductDto>();
 
             return dto;
+        }
+
+        public async Task<IEnumerable<ProductDto>> GetAsync()
+        {
+            var products = await _productsRepository.GetAsync();
+            var dtos = products.Adapt<IEnumerable<ProductDto>>();
+
+            return dtos;
         }
     }
 }

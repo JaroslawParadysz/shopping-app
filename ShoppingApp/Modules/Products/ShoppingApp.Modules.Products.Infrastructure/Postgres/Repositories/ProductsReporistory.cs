@@ -33,7 +33,9 @@ namespace ShoppingApp.Modules.Products.Infrastructure.Postgres.Repositories
 
         public async Task<IEnumerable<Product>> GetAsync()
         {
-            return await _dbContext.Products.ToListAsync();
+            return await _dbContext.Products
+                .Include(x => x.Category)
+                .ToListAsync();
         }
     }
 }

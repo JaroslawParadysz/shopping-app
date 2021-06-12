@@ -1,6 +1,6 @@
 ﻿namespace ShoppingApp.Modules.Products.Api.Endpoints
 {
-    internal class ProductsRest
+    public class ProductsRest
     {
         public const string BasePath = "products-module";
 
