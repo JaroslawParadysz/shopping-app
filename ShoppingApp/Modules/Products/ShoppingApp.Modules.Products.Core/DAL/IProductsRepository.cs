@@ -10,5 +10,7 @@ namespace ShoppingApp.Modules.Products.Core.DAL
         Task<Guid> AddAsync(Product product);
         Task<Product> GetAsync(Guid id);
         Task<IEnumerable<Product>> GetAsync();
+        Task UpdateAsync(Product product);
+        Task DeleteAsync(Product product);
     }
 }

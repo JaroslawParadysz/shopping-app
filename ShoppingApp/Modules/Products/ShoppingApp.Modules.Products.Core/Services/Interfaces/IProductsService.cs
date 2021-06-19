@@ -10,5 +10,7 @@ namespace ShoppingApp.Modules.Products.Core.Services.Interfaces
         Task<Guid> AddAsync(ProductDto dto);
         Task<ProductDto> GetAsync(Guid id);
         Task<IEnumerable<ProductDto>> GetAsync();
+        Task UpdateAsync(ProductDto dto);
+        Task DeleteAsync(Guid id);
     }
 }

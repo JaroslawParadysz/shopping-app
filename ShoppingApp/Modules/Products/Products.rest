@@ -1,13 +1,13 @@
 @url = http://localhost:5000/products-module
 @categoryId = 8364e211-d8b1-4bb6-9b3e-1526b2365dad
-@productId = dc36eaa7-2c10-4e72-8f51-3dd4798690a0
+@productId = c0a63f75-c1ec-481a-9535-9dbf812fd3a3
 
 ###
 POST {{url}}/products
 Content-Type: application/json
 
 {
-    "productName" : "New Product",
+    "productName" : "First Version Product",
     "categoryId": "{{categoryId}}"
 }
 
@@ -17,3 +17,15 @@ GET {{url}}/products/{{productId}}
 
 ###
 GET {{url}}/products
+
+###
+PUT {{url}}/products/{{productId}}
+Content-Type: application/json
+
+{
+    "categoryId" : "{{categoryId}}",
+    "productName" : "Updated product"
+}
+
+###
+DELETE {{url}}/products/{{productId}}

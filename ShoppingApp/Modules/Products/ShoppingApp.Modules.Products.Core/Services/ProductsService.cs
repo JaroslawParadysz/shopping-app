@@ -23,20 +23,28 @@ namespace ShoppingApp.Modules.Products.Core.Services
 
         public async Task<Guid> AddAsync(ProductDto dto)
         {
-            var category = await _categoriesRepository.GetAsync(dto.CategoryId);
+            Category category = await _categoriesRepository.GetAsync(dto.CategoryId);
+            if (category is null) throw new CategoryNotFoundException(dto.CategoryId);
+
             Product product = dto.Adapt<Product>();
             product.Category = category;
             return await _productsRepository.AddAsync(product);
+        }
+
+        public async Task DeleteAsync(Guid id)
+        {
+            var product = await _productsRepository.GetAsync(id);
+
+            if (product is null) throw new ProductNotFoundException(id);
+
+            await _productsRepository.DeleteAsync(product);
         }
 
         public async Task<ProductDto> GetAsync(Guid id)
         {
             var product = await _productsRepository.GetAsync(id);
 
-            if (product is null)
-            {
-                throw new ProductNotFoundException(id);
-            }
+            if (product is null) throw new ProductNotFoundException(id);
 
             var dto = product.Adapt<ProductDto>();
 
@@ -49,6 +57,20 @@ namespace ShoppingApp.Modules.Products.Core.Services
             var dtos = products.Adapt<IEnumerable<ProductDto>>();
 
             return dtos;
+        }
+
+        public async Task UpdateAsync(ProductDto dto)
+        {
+            Product product = await _productsRepository.GetAsync(dto.Id);
+            if (product is null) throw new ProductNotFoundException(dto.Id);
+
+            Category category = await _categoriesRepository.GetAsync(dto.CategoryId);
+            if (category is null) throw new CategoryNotFoundException(dto.CategoryId);
+
+            product.Name = dto.Name;
+            product.Category = category;
+
+            await _productsRepository.UpdateAsync(product);
         }
     }
 }
