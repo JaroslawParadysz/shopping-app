@@ -1,12 +1,9 @@
 using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using ShoppingApp.Bootstraper.Middlewares;
 using ShoppingApp.Modules.Products.Api.Endpoints;
 using ShoppingApp.Modules.Products.Api.Endpoints.Products;
 using ShoppingApp.Modules.Products.Core.DomainModels;
-using ShoppingApp.Modules.Products.Infrastructure.Postgres;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,59 +14,33 @@ using Xunit;
 
 namespace ShoppingApp.Modules.Products.Integration.Tests
 {
-    public class ServicesFixture : IDisposable
+    public class ProductsTests : IClassFixture<ProductModuleFixture>, IDisposable
     {
-        public IServiceCollection ServiceCollection { get; set; }
-
-        public ServicesFixture()
-        {
-            RegisterServicesAction = (svc) => {
-                var serviceDescriptor = svc.SingleOrDefault(
-                    d => d.ServiceType ==
-                        typeof(DbContextOptions<ProductsDbContext>));
-                svc.Remove(serviceDescriptor);
-                svc.AddDbContext<ProductsDbContext>(opt => opt.UseInMemoryDatabase(databaseName: "InMemoryDb"));
-                ServiceCollection = svc;
-            };
-        }
-
-        public Action<IServiceCollection> RegisterServicesAction { get; set; }
-
-        public void Dispose()
-        {
-            int i = 10;
-        }
-    }
-
-    public class ProductsTests : IClassFixture<ServicesFixture>, IDisposable
-    {
-        public ProductsTests(ServicesFixture servicesFixture)
+        public ProductsTests(ProductModuleFixture servicesFixture)
         {
             ServicesFixture = servicesFixture;
         }
 
-        public ServicesFixture ServicesFixture { get; set; }
+        public ProductModuleFixture ServicesFixture { get; set; }
 
         [Fact]
         public async Task GetAsync_Expect_Success()
-        {            
-            var factory = new CustomWebApplicationFactory<Bootstraper.Startup>(ServicesFixture.RegisterServicesAction);
-            var client = factory.CreateClient();
-
+        {
+            //Arrange
             Category category = new Category
             {
                 Name = "Abc Category",
                 Products = new List<Product> { new Product { Name = "Abc Product" } }
             };
 
-            using (ServiceProvider serviceProvider = ServicesFixture.ServiceCollection.BuildServiceProvider())
-            {
-                var productDbContext = serviceProvider.GetRequiredService<ProductsDbContext>();
-                productDbContext.Categories.Add(category);
-                productDbContext.SaveChanges();
-            }
+            var factory = new CustomWebApplicationFactory<Bootstraper.Startup>(ServicesFixture.RegisterServicesAction);
+            var client = factory.CreateClient();
+            await ServicesFixture.AddCategoryAsync(category);
 
+            //Act
             var response = await client.GetAsync(ProductsRest.ProductsPath);
+
+            //Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
             var payload = JsonConvert.DeserializeObject<GetAllResponse>(await response.Content.ReadAsStringAsync());
@@ -80,24 +51,23 @@ namespace ShoppingApp.Modules.Products.Integration.Tests
         [Fact]
         public async Task Get_For_Unexisting_ProductId_Expects_BadRequest()
         {
-            var factory = new CustomWebApplicationFactory<Bootstraper.Startup>(ServicesFixture.RegisterServicesAction);
-            var client = factory.CreateClient();
-
+            //Arrange
             Category category = new Category
             {
                 Name = "Abc Category",
                 Products = new List<Product> { new Product { Name = "Abc Product" } }
             };
 
-            using (ServiceProvider serviceProvider = ServicesFixture.ServiceCollection.BuildServiceProvider())
-            {
-                var productDbContext = serviceProvider.GetRequiredService<ProductsDbContext>();
-                productDbContext.Categories.Add(category);
-                productDbContext.SaveChanges();
-            }
+            var factory = new CustomWebApplicationFactory<Bootstraper.Startup>(ServicesFixture.RegisterServicesAction);
+            var client = factory.CreateClient();
+            await ServicesFixture.AddCategoryAsync(category);
 
             var unexistingProductId = Guid.NewGuid();
+
+            //Act
             var response = await client.GetAsync(ProductsRest.ProductsPath + "/" + unexistingProductId);
+
+            //Assert
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 
             var payload = JsonConvert.DeserializeObject<Error>(await response.Content.ReadAsStringAsync());
@@ -108,39 +78,31 @@ namespace ShoppingApp.Modules.Products.Integration.Tests
         [Fact]
         public async Task Create_Expects_Success()
         {
-            var factory = new CustomWebApplicationFactory<Bootstraper.Startup>(ServicesFixture.RegisterServicesAction);
-            var client = factory.CreateClient();
-
+            //Arrange
             Category category = new Category
             {
                 Name = "Abc Category"
             };
 
-            using (ServiceProvider serviceProvider = ServicesFixture.ServiceCollection.BuildServiceProvider())
-            {
-                var productDbContext = serviceProvider.GetRequiredService<ProductsDbContext>();
-                productDbContext.Categories.Add(category);
-                productDbContext.SaveChanges();
-            }
+            var factory = new CustomWebApplicationFactory<Bootstraper.Startup>(ServicesFixture.RegisterServicesAction);
+            var client = factory.CreateClient();
+            await ServicesFixture.AddCategoryAsync(category);
 
             CreateProductCommand command = new CreateProductCommand { CategoryId = category.Id, ProductName = "Probuct Abc" };
             var json = JsonConvert.SerializeObject(command);
 
             StringContent content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+
+            //Act
             var response = await client.PostAsync(ProductsRest.ProductsPath, content);
 
+            //Assert
             response.StatusCode.Should().Be(HttpStatusCode.Created);
         }
 
         public void Dispose()
         {
-            using (ServiceProvider serviceProvider = ServicesFixture.ServiceCollection.BuildServiceProvider())
-            {
-                var productDbContext = serviceProvider.GetRequiredService<ProductsDbContext>();
-                productDbContext.Products.RemoveRange(productDbContext.Products.ToList());
-                productDbContext.Categories.RemoveRange(productDbContext.Categories.ToList());
-                productDbContext.SaveChanges();
-            }
+            ServicesFixture.CleanDatabase();
         }
     }
 }
