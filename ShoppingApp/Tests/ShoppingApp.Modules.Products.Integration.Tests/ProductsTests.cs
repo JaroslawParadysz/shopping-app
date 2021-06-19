@@ -14,14 +14,14 @@ using Xunit;
 
 namespace ShoppingApp.Modules.Products.Integration.Tests
 {
-    public class ProductsTests : IClassFixture<ProductModuleFixture>, IDisposable
+    public class ProductsTests : IClassFixture<ProducttestsFixture>, IDisposable
     {
-        public ProductsTests(ProductModuleFixture servicesFixture)
+        public ProductsTests(ProducttestsFixture servicesFixture)
         {
             ServicesFixture = servicesFixture;
         }
 
-        public ProductModuleFixture ServicesFixture { get; set; }
+        public ProducttestsFixture ServicesFixture { get; set; }
 
         [Fact]
         public async Task GetAsync_Expect_Success()
@@ -98,6 +98,49 @@ namespace ShoppingApp.Modules.Products.Integration.Tests
 
             //Assert
             response.StatusCode.Should().Be(HttpStatusCode.Created);
+        }
+
+        [Fact]
+        public async Task Update_Expects_NoContent_StatusCode()
+        {
+            //Arrange
+            Category category = new Category
+            {
+                Name = "Abc Category",
+                Products = new List<Product> { new Product { Name = "Abc Product" } }
+            };
+
+            var factory = new CustomWebApplicationFactory<Bootstraper.Startup>(ServicesFixture.RegisterServicesAction);
+            var client = factory.CreateClient();
+            await ServicesFixture.AddCategoryAsync(category);
+            UpdateProductCommand command = new UpdateProductCommand { CategoryId = category.Id, ProductName = "Updated product name" };
+            string json = JsonConvert.SerializeObject(command);
+            StringContent payload = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+
+            //Act
+            var response = await client.PutAsync($"{ProductsRest.ProductsPath}/{category.Products.Single().Id}", payload);
+
+            //Asset
+            response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+        }
+
+        public async Task Delete_Expect_NoContent_Statuscode()
+        {
+            //Arrange
+            Category category = new Category
+            {
+                Name = "Abc Category",
+                Products = new List<Product> { new Product { Name = "Abc Product" } }
+            };
+
+            var factory = new CustomWebApplicationFactory<Bootstraper.Startup>(ServicesFixture.RegisterServicesAction);
+            var client = factory.CreateClient();
+
+            //Act
+            var response = await client.DeleteAsync($"{ProductsRest.ProductsPath}/{category.Products.Single().Id}");
+
+            //Assert
+            response.StatusCode.Should().Be(HttpStatusCode.NoContent);
         }
 
         public void Dispose()

@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace ShoppingApp.Modules.Products.Integration.Tests
 {
-    public class ProductModuleFixture
+    public class ProducttestsFixture
     {
         public IServiceCollection ServiceCollection { get; set; }
         public Action<IServiceCollection> RegisterServicesAction { get; set; }
 
-        public ProductModuleFixture()
+        public ProducttestsFixture()
         {
             RegisterServicesAction = (svc) => {
                 var serviceDescriptor = svc.SingleOrDefault(
