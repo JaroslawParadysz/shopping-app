@@ -1,5 +1,4 @@
 using FluentAssertions;
-using Newtonsoft.Json;
 using ShoppingApp.Bootstraper.Middlewares;
 using ShoppingApp.Modules.Products.Api.Endpoints;
 using ShoppingApp.Modules.Products.Api.Endpoints.Products;
@@ -9,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -43,7 +43,7 @@ namespace ShoppingApp.Modules.Products.Integration.Tests
             //Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-            var payload = JsonConvert.DeserializeObject<GetAllResponse>(await response.Content.ReadAsStringAsync());
+            var payload = JsonSerializer.Deserialize<GetAllResponse>(await response.Content.ReadAsStringAsync());
             payload.Data.Count().Should().Be(1);
             payload.Data.Single().Name.Should().Be("Abc Product get");
 
@@ -72,7 +72,7 @@ namespace ShoppingApp.Modules.Products.Integration.Tests
             //Assert
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 
-            var payload = JsonConvert.DeserializeObject<Error>(await response.Content.ReadAsStringAsync());
+            var payload = JsonSerializer.Deserialize<Error>(await response.Content.ReadAsStringAsync());
             payload.Code.Should().Be("product_not_found");
             payload.Message.Should().Be($"Product with id {unexistingProductId} has not been found.");
 
@@ -93,7 +93,7 @@ namespace ShoppingApp.Modules.Products.Integration.Tests
             await ServicesFixture.AddCategoryAsync(category);
 
             CreateProductCommand command = new CreateProductCommand { CategoryId = category.Id, ProductName = "Probuct Abc" };
-            var json = JsonConvert.SerializeObject(command);
+            var json = JsonSerializer.Serialize(command);
 
             StringContent content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
 
@@ -120,7 +120,7 @@ namespace ShoppingApp.Modules.Products.Integration.Tests
             var client = factory.CreateClient();
             await ServicesFixture.AddCategoryAsync(category);
             UpdateProductCommand command = new UpdateProductCommand { CategoryId = category.Id, ProductName = "Updated product name" };
-            string json = JsonConvert.SerializeObject(command);
+            string json = JsonSerializer.Serialize(command);
             StringContent payload = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
 
             //Act
