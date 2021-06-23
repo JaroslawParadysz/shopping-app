@@ -24,10 +24,6 @@ namespace ShoppingApp.Modules.Products.Api.Endpoints.Products
         [HttpGet(ProductsRest.ProductsPath + "/{id}", Name = "GetProduct")]
         public async override Task<ActionResult<GetProductResponse>> HandleAsync([FromRoute] Guid id, CancellationToken cancellationToken = default)
         {
-            TypeAdapterConfig<ProductDto, GetProductResponse>.NewConfig()
-                .Map(dest => dest.ProductName, src => src.Name)
-                .Map(dest => dest.ProductId, src => src.Id);
-
             var dto = await _productsService.GetAsync(id);
             var response = dto.Adapt<GetProductResponse>();
 

@@ -50,6 +50,8 @@ namespace ShoppingApp.Bootstraper
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ShoppingApp.Bootstraper v1"));
             }
 
+            ProductsModule.ConfigureTypesMappings();
+
             app.UseHttpsRedirection();
 
             app.UseRouting();

@@ -27,21 +27,25 @@ namespace ShoppingApp.Modules.Products.Integration.Tests
 
         public async Task AddCategoryAsync(Category category)
         {
-            using (ServiceProvider serviceProvider = ServiceCollection.BuildServiceProvider())
+            using (var scope = ServiceCollection.BuildServiceProvider().CreateScope())
             {
-                var productDbContext = serviceProvider.GetRequiredService<ProductsDbContext>();
+                var productDbContext = scope.ServiceProvider.GetRequiredService<ProductsDbContext>();
                 productDbContext.Categories.Add(category);
                 await productDbContext.SaveChangesAsync();
             }
         }
 
-        public void CleanDatabase()
+        public void RemoveCategory(Guid categoryId)
         {
-            using (ServiceProvider serviceProvider = ServiceCollection.BuildServiceProvider())
+            using (var scope = ServiceCollection.BuildServiceProvider().CreateScope())
             {
-                var productDbContext = serviceProvider.GetRequiredService<ProductsDbContext>();
-                productDbContext.Products.RemoveRange(productDbContext.Products.ToList());
-                productDbContext.Categories.RemoveRange(productDbContext.Categories.ToList());
+                var productDbContext = scope.ServiceProvider.GetRequiredService<ProductsDbContext>();
+
+                var categoryToRemove = productDbContext.Categories.Single(x => x.Id == categoryId);
+                var productsToRemove = productDbContext.Products.Where(x => x.Category.Id == categoryId).ToList();
+
+                productDbContext.Products.RemoveRange(productsToRemove);
+                productDbContext.Categories.Remove(categoryToRemove);
                 productDbContext.SaveChanges();
             }
         }
