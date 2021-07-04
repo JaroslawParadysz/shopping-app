@@ -11,7 +11,7 @@ namespace ShoppingApp.Shared.Infrastructure
         {
             services.AddControllers().ConfigureApplicationPartManager(
                 appPartManager => appPartManager.FeatureProviders.Add(new InternalControllerFeatureProvider())
-            );
+            ).AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
             services.AddPostgres();
 
             return services;
