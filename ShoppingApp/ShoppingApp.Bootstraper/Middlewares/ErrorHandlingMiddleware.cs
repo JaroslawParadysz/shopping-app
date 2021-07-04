@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using ShoppingApp.Shared.Abstraction;
 using System;
 using System.Collections.Concurrent;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace ShoppingApp.Bootstraper.Middlewares
@@ -49,7 +50,7 @@ namespace ShoppingApp.Bootstraper.Middlewares
                     Message = message,
                     Code = code
                 };
-                await context.Response.WriteAsJsonAsync(error);
+                await context.Response.WriteAsJsonAsync(error, new JsonSerializerOptions() { PropertyNamingPolicy = null });
             }
         }
     }

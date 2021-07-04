@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace ShoppingApp.Modules.Products.Integration.Tests
 {
-    public class ProducttestsFixture
+    public class ProductTestsFixture
     {
-        public IServiceCollection ServiceCollection { get; set; }
+        private IServiceCollection _serviceCollection;
         public Action<IServiceCollection> RegisterServicesAction { get; set; }
 
-        public ProducttestsFixture()
+        public ProductTestsFixture()
         {
             RegisterServicesAction = (svc) => {
                 var serviceDescriptor = svc.SingleOrDefault(
@@ -21,13 +21,13 @@ namespace ShoppingApp.Modules.Products.Integration.Tests
                         typeof(DbContextOptions<ProductsDbContext>));
                 svc.Remove(serviceDescriptor);
                 svc.AddDbContext<ProductsDbContext>(opt => opt.UseInMemoryDatabase(databaseName: "InMemoryDb"));
-                ServiceCollection = svc;
+                _serviceCollection = svc;
             };
         }
 
         public async Task AddCategoryAsync(Category category)
         {
-            using (var scope = ServiceCollection.BuildServiceProvider().CreateScope())
+            using (var scope = _serviceCollection.BuildServiceProvider().CreateScope())
             {
                 var productDbContext = scope.ServiceProvider.GetRequiredService<ProductsDbContext>();
                 productDbContext.Categories.Add(category);
@@ -37,7 +37,7 @@ namespace ShoppingApp.Modules.Products.Integration.Tests
 
         public void RemoveCategory(Guid categoryId)
         {
-            using (var scope = ServiceCollection.BuildServiceProvider().CreateScope())
+            using (var scope = _serviceCollection.BuildServiceProvider().CreateScope())
             {
                 var productDbContext = scope.ServiceProvider.GetRequiredService<ProductsDbContext>();
 
@@ -46,6 +46,21 @@ namespace ShoppingApp.Modules.Products.Integration.Tests
 
                 productDbContext.Products.RemoveRange(productsToRemove);
                 productDbContext.Categories.Remove(categoryToRemove);
+                productDbContext.SaveChanges();
+            }
+        }
+
+        public void RemoveCategory()
+        {
+            using (var scope = _serviceCollection.BuildServiceProvider().CreateScope())
+            {
+                var productDbContext = scope.ServiceProvider.GetRequiredService<ProductsDbContext>();
+
+                var categoryToRemove = productDbContext.Categories.ToList();
+                var productsToRemove = productDbContext.Products.ToList();
+
+                productDbContext.Products.RemoveRange(productsToRemove);
+                productDbContext.Categories.RemoveRange(categoryToRemove);
                 productDbContext.SaveChanges();
             }
         }
